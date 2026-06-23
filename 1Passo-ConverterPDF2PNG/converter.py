@@ -13,7 +13,7 @@ OBS4: exclua as páginas 1 (capa), 19 (proposta de redação) e 32 (rascunho da 
 from pdf2image import convert_from_path
 import os
 
-arquivo = "enem2024.pdf"
+arquivo = "ENEM2006_prova.pdf"
 pasta_saida = "imagens-convertidas"
 
 if not os.path.exists(pasta_saida):
