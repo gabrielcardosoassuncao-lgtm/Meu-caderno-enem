@@ -4,10 +4,10 @@ Autor: Alexandre Nassar de Peder
 Criação: 02/10/2025
 Atualização: 03/06/2026
 
-OBS1: puxe a pasta "sem-bordas-externas" do passo 2 para essa pasta do passo 3
-OBS2: nesse caderno de 2024, as páginas 15 e 28 são páginas inteiras. Crie uma pasta chamada "inteiras" e coloque só essas duas páginas lá
-OBS3: ao cortar ao meio, vai gerar uma bordinha interna.
-
+OBS1: puxe a pasta "sem-bordas-externas" do passo 2 para esta pasta do passo 3
+OBS2: pode ter páginas inteiras e páginas com coluas. Crie uma pasta chamada "inteiras", retire as imagens inteiras e coloque-as nessa pasta
+OBS3: execute este código. Ao cortar as colunas ao meio, vai gerar uma bordinha interna
+OBS4: as imagens vão receber um novo nome, com o sufixo "_esquerda" ou "_direita" para indicar a coluna
 """
 
 from PIL import Image
