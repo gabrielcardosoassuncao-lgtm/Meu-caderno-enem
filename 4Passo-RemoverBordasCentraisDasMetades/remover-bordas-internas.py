@@ -7,7 +7,8 @@ Atualização: 03/06/2026
 OBS1: puxe a pasta "divididas-com-bordas-do-meio" do passo 3 para essa pasta do passo 4
 OBS2: As imagens da coluna da esquerda tem uma bordinha no lado direito
 OBS3: As imagens da coluna da direita tem uma bordinha no lado esquerdo
-OBS4: tive que contar pixels usando o GIMP para saber quanto pixels cortar de borda interna
+OBS4: abra as imagens no GIMP para contar pixels e saber quantos pixels cortar da borda interna
+OBS5: Atualize as linhas 35 e 39 com os valores corretos de corte (esquerda, superior, direita, inferior) para a respectiva coluna (esquerda/direita)
 
 """
 from PIL import Image
@@ -30,14 +31,12 @@ for nome_arquivo in os.listdir(pasta_imagens):
         
         # Aplica cortes adicionais baseados no nome do arquivo
         if nome_arquivo.endswith("_esquerda.png"):
-            # Remove 10 pixels da borda direita
-            caixa_corte = (caixa_corte[0], caixa_corte[1], 
-                          caixa_corte[2] - 25, caixa_corte[3])
+            # Remover pixels da borda direita das imagens de coluna da esquerda, nesse exemplo, 25 pixels
+            caixa_corte = (caixa_corte[0], caixa_corte[1], caixa_corte[2] - 25, caixa_corte[3]) # ATUALIZE AQUI O VALOR DE CORTE PARA A COLUNA DA ESQUERDA (esquerda, superior, direita, inferior)
         
         elif nome_arquivo.endswith("_direita.png"):
-            # Remove 10 pixels da borda esquerda
-            caixa_corte = (caixa_corte[0] + 25, caixa_corte[1], 
-                          caixa_corte[2], caixa_corte[3])
+            # Remover pixels da borda esquerda das imagens de coluna da direita, nesse exemplo, 25 pixels
+            caixa_corte = (caixa_corte[0] + 45, caixa_corte[1], caixa_corte[2], caixa_corte[3]) # ATUALIZE AQUI O VALOR DE CORTE PARA A COLUNA DA DIREITA (esquerda, superior, direita, inferior)
         
         imagem_cortada = imagem.crop(caixa_corte)
         
