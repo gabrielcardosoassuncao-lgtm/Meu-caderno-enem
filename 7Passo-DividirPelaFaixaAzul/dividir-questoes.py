@@ -1,13 +1,15 @@
 """
-Propósito: Dividir as questões faixa azul, que é o padrão de início de cada questão
+Propósito: Dividir as questões por padrão. Observa-se que ao início de cada questão tem uma faixa de alguma cor, que é o padrão de início de cada questão
 Autor: Alexandre Nassar de Peder
 Criação: 02/10/2025
 Atualização: 03/06/2026
 
-OBS1: puxe a imagem "colunas_concatenadas_verticalmente.png" do passo 6 para essa pasta do passo 7
-OBS2: puxe a pasta "inteiras" do passo 5 para essa pasta do passo 7
-OBS3: atualize as linhas 127 a 133. Compensa rodar esse código uma vez para as questões concatenadas, depois para cada página inteira
-OBS4: se você fizer esse código com um caderno de cor diferente, precisa usar o GIMP para descobrir a cor RGB exata das faixas que dividem as questões, e então alterar a variavel da linha 136
+OBS1: puxe a imagem "colunas_concatenadas_verticalmente.png" do passo 6 para essa pasta do passo 7, e as imagens de páginas inteiras da pasta "inteiras" do passo 5 para essa pasta do passo 7
+OBS2: esse código vai percorrer a imagem de cima pra baixo, sempre analisando o pixel do meio da imagem, para encontrar a faixa que divide as questões. Quando encontrar a faixa, ele vai cortar a imagem ANTES da faixa, e depois pular a faixa para continuar procurando a próxima questão
+OBS3: primeiro você vai rodar esse código para cortar a imagem de colunas concatenadas, depois você vai rodar para cada página inteira
+OBS4: atualize as linhas 127 e 128 para recortar a imagem de colunas concatenadas, depois atualize para recortar cada página inteira. Atualize o nome da pasta de saída também
+OBS5: atualize a linha 134 para a cor RGB 0a100 exata da faixa que divide as questões. Use o GIMP para descobrir a cor
+OBS6: atualize a linha 27 com a altura da faixa. Use o GIMP para medir a altura da faixa em pixels
 """
 
 from PIL import Image
@@ -22,7 +24,7 @@ def converter_cor_gimp_para_rgb(gimp_r, gimp_g, gimp_b):
     b = int((gimp_b / 100) * 255)
     return (r, g, b)
 
-def encontrar_faixa_azul(imagem, cor_alvo=(64, 193, 243), tolerancia=15, altura_faixa=10):
+def encontrar_faixa_azul(imagem, cor_alvo, tolerancia=15, altura_faixa=10): # ATUALIZAR a altura da faixa
     """
     Encontra posições onde há uma faixa horizontal da cor especificada
     """
@@ -38,8 +40,8 @@ def encontrar_faixa_azul(imagem, cor_alvo=(64, 193, 243), tolerancia=15, altura_
         faixa_encontrada = True
         
         for dy in range(altura_faixa):
-            # Pega a cor do pixel atual (verifica no meio da imagem)
-            pixel = pixels[largura // 2, y + dy]
+            # Pega a cor do pixel atual (verifica no último pixel da linha, ou seja, no canto da imagem)
+            pixel = pixels[largura-2, y + dy]  # CORRIGIDO: verificar o pixel próximo ao canto para evitar bordas
             
             if len(pixel) == 4:  # RGBA
                 r, g, b, a = pixel
@@ -68,9 +70,9 @@ def encontrar_faixa_azul(imagem, cor_alvo=(64, 193, 243), tolerancia=15, altura_
     
     return posicoes_corte
 
-def dividir_imagem_por_faixas(caminho_imagem, pasta_saida, cor_alvo=(64, 193, 243)):
+def dividir_imagem_por_faixas(caminho_imagem, pasta_saida, cor_alvo):
     """
-    Divide a imagem verticalmente cortando ANTES das faixas azuis
+    Divide a imagem verticalmente cortando ANTES das faixas
     """
     # Abre a imagem
     imagem = Image.open(caminho_imagem)
@@ -121,22 +123,18 @@ def dividir_imagem_por_faixas(caminho_imagem, pasta_saida, cor_alvo=(64, 193, 24
         secao.save(caminho_completo)
         print(f"Salvo: {caminho_completo} ({secao.width}x{secao.height}px)")
 
-# Exemplo de uso
 if __name__ == "__main__":
-    # Configurações
-    caminho_imagem = "colunas_concatenadas_verticalmente.png" # Substitua pelo caminho da sua imagem
-    #caminho_imagem = "./inteiras/pagina_enem_15.png"  # Substitua pelo caminho da sua imagem
-    #caminho_imagem = "./inteiras/pagina_enem_28.png"  # Substitua pelo caminho da sua imagem
-    
+    caminho_imagem = "colunas_concatenadas_verticalmente.png"  # Substitua pelo caminho da sua imagem
     pasta_saida = "questoes_colunas" # Substitua pelo nome da pasta de saída desejada (questoes_colunas, pagina_15, pagina_28)
+
+    #caminho_imagem = "./inteiras/pagina_enem_15.png"  # Substitua pelo caminho da sua imagem
     #pasta_saida = "pagina_15" # Substitua pelo nome da pasta de saída desejada (questoes_colunas, pagina_15, pagina_28)
-    #pasta_saida = "pagina_28" # Substitua pelo nome da pasta de saída desejada (questoes_colunas, pagina_15, pagina_28)
     
-    # Converte a cor do GIMP (25.1, 75.7, 95.3) para RGB (0-255)
-    cor_azul = converter_cor_gimp_para_rgb(25.1, 75.7, 95.3)
-    print(f"Cor convertida: RGB{cor_azul}")
+    # Converte a cor do GIMP 0a100 para RGB (0a255)
+    cor_do_padrao = converter_cor_gimp_para_rgb(25.1, 75.7, 95.3) # COLOCAR O RGB CORRETO DA FAIXA QUE DIVIDE AS QUESTÕES (0a100 do GIMP)
+    print(f"Cor convertida: RGB{cor_do_padrao}")
     
     # Executa a divisão
-    dividir_imagem_por_faixas(caminho_imagem, pasta_saida, cor_azul)
+    dividir_imagem_por_faixas(caminho_imagem, pasta_saida, cor_do_padrao)
     
     print("Divisão concluída!")
